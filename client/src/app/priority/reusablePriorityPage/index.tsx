@@ -1,4 +1,4 @@
-"use Client";
+"use client";
 
 import { useAppSelector } from "@/app/redux";
 import Header from "@/components/Header";
@@ -11,13 +11,13 @@ import {
   useGetTasksByUserQuery,
 } from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 
-type Props= {
+type Props = {
   priority: Priority;
-}
+};
 
-const columns: GridColDef[]  = [
+const columns: GridColDef[] = [
   {
     field: "title",
     headerName: "Title",
@@ -26,7 +26,7 @@ const columns: GridColDef[]  = [
   {
     field: "description",
     headerName: "Description",
-    width: 200 ,
+    width: 200,
   },
   {
     field: "status",
@@ -36,7 +36,7 @@ const columns: GridColDef[]  = [
       <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
         {params.value}
       </span>
-    )
+    ),
   },
   {
     field: "priority",
@@ -72,17 +72,17 @@ const columns: GridColDef[]  = [
   },
 ];
 
+const ReusablePriorityPage = ({ priority }: Props) => {
+  const [view, setView] = useState("list");
+  const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
 
-const ReusablePriorityPage = ({priority}: Props) => {
-  const [view , setView] = useState("list");
-  const [isModalNewTaskOpen , setIsModalNewTaskOpen] = useState(false);
-
+  
   const userId = 1;
   const {
     data: tasks,
     isLoading,
     isError: isTasksError,
-  } = useGetTasksByUserQuery(userId || 0,{
+  } = useGetTasksByUserQuery(userId || 0, {
     skip: userId === null,
   });
 
@@ -94,25 +94,25 @@ const ReusablePriorityPage = ({priority}: Props) => {
 
   if (isTasksError || !tasks) return <div>Error fetching tasks</div>;
 
-  return(
-    <div>
+  return (
+    <div className="m-5 p-4">
       <ModalNewTask
-         isOpen = {isModalNewTaskOpen}
-         onClose={() => setIsModalNewTaskOpen}
+        isOpen={isModalNewTaskOpen}
+        onClose={() => setIsModalNewTaskOpen(false)}
       />
       <Header
         name="Priority Page"
         buttonComponent={
-          <button 
-          className="mr-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          onClick={() => setIsModalNewTaskOpen(true)}
-           >
+          <button
+            className="mr-3 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+            onClick={() => setIsModalNewTaskOpen(true)}
+          >
             Add Task
           </button>
-        } 
+        }
       />
       <div className="mb-4 flex justify-start">
-        <button 
+        <button
           className={`px-4 py-2 ${
             view === "list" ? "bg-gray-300" : "bg-white"
           } rounded-l`}
@@ -120,7 +120,7 @@ const ReusablePriorityPage = ({priority}: Props) => {
         >
           List
         </button>
-        <button 
+        <button
           className={`px-4 py-2 ${
             view === "table" ? "bg-gray-300" : "bg-white"
           } rounded-l`}
@@ -134,19 +134,21 @@ const ReusablePriorityPage = ({priority}: Props) => {
       ) : view === "list" ? (
         <div className="grid grid-cols-1 gap-4">
           {filteredTasks?.map((task: Task) => (
-            <TaskCard key={task.id} task= {task} />
+            <TaskCard key={task.id} task={task} />
           ))}
         </div>
       ) : (
-        view === "table" && filteredTasks && (
+        view === "table" &&
+        filteredTasks && (
           <div className="z-0 w-full">
-            <DataGrid 
+            <DataGrid
               rows={filteredTasks}
               columns={columns}
               checkboxSelection
-              getRowId ={(row) => row.id}
+              getRowId={(row) => row.id}
               className={dataGridClassNames}
-              sx={dataGridSxStyles(isDarkMode)}/>
+              sx={dataGridSxStyles(isDarkMode)}
+            />
           </div>
         )
       )}
