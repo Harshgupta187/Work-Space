@@ -3,29 +3,28 @@ import { useCreateProjectMutation } from "@/state/api";
 import React, { useState } from "react";
 import { formatISO } from "date-fns";
 
-
 type Props = {
   isOpen: boolean;
-  OnClose: () => void;
-}
+  onClose: () => void;
+};
 
-const ModalNewProject = ({isOpen, OnClose}: Props) => {
-  const [createProject , {isLoading}] = useCreateProjectMutation();
-  const [projectName , setProjectName] = useState("");
-  const [description , setDescription] = useState("");
-  const [startDate , setStartDate] = useState("");
-  const [endDate , setEndDate] = useState("");
+const ModalNewProject = ({ isOpen, onClose }: Props) => {
+  const [createProject, { isLoading }] = useCreateProjectMutation();
+  const [projectName, setProjectName] = useState("");
+  const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const handleSubmit = async () => {
-    if(!projectName || !startDate || !endDate) return;
+    if (!projectName || !startDate || !endDate) return;
 
-    const formattedStartDate = formatISO(new Date(startDate) ,{
+    const formattedStartDate = formatISO(new Date(startDate), {
       representation: "complete",
     });
-    const formattedEndDate = formatISO(new Date(endDate) ,{
+    const formattedEndDate = formatISO(new Date(endDate), {
       representation: "complete",
     });
-    
+
     await createProject({
       name: projectName,
       description,
@@ -36,12 +35,13 @@ const ModalNewProject = ({isOpen, OnClose}: Props) => {
 
   const isFormValid = () => {
     return projectName && description && startDate && endDate;
-  }
+  };
+
   const inputStyles =
     "w-full rounded border border-gray-300 p-2 shadow-sm dark:border-dark-tertiary dark:bg-dark-tertiary dark:text-white dark:focus:outline-none";
 
   return (
-    <Modal isOpen={isOpen} onClose={onclose} name = "Create New Project">
+    <Modal isOpen={isOpen} onClose={onClose} name="Create New Project">
       <form
         className="mt-4 space-y-6"
         onSubmit={(e) => {
@@ -49,27 +49,29 @@ const ModalNewProject = ({isOpen, OnClose}: Props) => {
           handleSubmit();
         }}
       >
-        <input 
+        <input
           type="text"
           className={inputStyles}
           placeholder="Project Name"
-          value = {projectName}
+          value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
         />
         <textarea
           className={inputStyles}
           placeholder="Description"
-          value = {description}
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-2">
           <input
+            aria-label="startDate"
             type="date"
             className={inputStyles}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
           <input
+            aria-label="endDate"
             type="date"
             className={inputStyles}
             value={endDate}
@@ -87,7 +89,7 @@ const ModalNewProject = ({isOpen, OnClose}: Props) => {
         </button>
       </form>
     </Modal>
-  )
-}
+  );
+};
 
-export default ModalNewProject
+export default ModalNewProject;
