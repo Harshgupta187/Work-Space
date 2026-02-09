@@ -11,7 +11,7 @@ const UserCard = ({ user }: Props) => {
     <div className="flex items-center rounded border p-4 shadow">
       {user.profilePictureUrl && (
         <Image
-          src={`/p1.jpeg`}
+          src={`${process.env.NEXT_PUBLIC_S3_BASE_URL}/p1.jpeg`}
           alt="profile picture"
           width={32}
           height={32}
