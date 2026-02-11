@@ -1,9 +1,12 @@
 import React from "react";
 import { Menu, Moon, Search, Settings, Sun, User } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed , setIsDarkMode } from "@/state";
+import { useGetAuthUserQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 
 
 
@@ -17,6 +20,17 @@ const Navbar = () => {
   const isDarkMode = useAppSelector(
     (state) => state.global.isDarkMode
   );
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+  const handleSignOut = async () => {
+    try{
+      await signOut();
+    } catch(error: any){
+      console.error("Error signing out: " , error.message)
+    }
+  }
+  if(!currentUser) return null;
+  const currentUserDetails = currentUser?.userDetails;
 
 
 
@@ -63,7 +77,32 @@ const Navbar = () => {
           <Settings className="h-6 w-6 cursor-pointer dark:text-white"/>
 
         </Link>
-        <div className="ml-2 mr-5 hidden min-h-[2em] w-[0.rem] bg-gray-200 md:inline-block"></div>
+        <div className="ml-2 mr-5 hidden min-h-[2em] w-[0.rem] bg-gray-200 md:inline-block">
+        </div>
+        <div className="hidden items-center justify-between md:flex">
+          <div className="align-center flex h-9 w-9 justify-center">
+            {!!currentUserDetails?.profilePictureUrl ? (
+              <Image
+                src={`${process.env.NEXT_PUBLIC_S3_BASE_URL}/${currentUserDetails?.profilePictureUrl}`} 
+                alt={currentUserDetails?.username || "User Profile picture"}
+                width={100} 
+                height={50}
+                className="h-full rounded-full object-cover"
+              />
+            ): (
+              <User className="h-6 w-6 cursor-pointer self-center rounded-full dark:text-white" />
+            )}
+          </div>
+          <span className="mx-3 text-gray-800 dark:text-white">
+            {currentUserDetails?.username}
+          </span>
+          <button 
+            className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
       
      
