@@ -20,11 +20,22 @@ export const getUsers = async(
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   const { cognitoId } = req.params;
   try {
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: {
         cognitoId: cognitoId,
       },
     });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          cognitoId,
+          username: `user_${cognitoId.slice(0, 6)}`,
+          profilePictureUrl: "i1.jpg",
+          teamId: 1,
+        },
+      });
+    }
 
     res.json(user);
   } catch (error: any) {
