@@ -20,6 +20,12 @@ const formFields = {
       label: "Username",
       inputProps: { required: true},
     },
+    preferred_username: {        // ADD THIS
+      order: 2,
+      placeholder: "Choose a username",
+      label: "Username",
+      isHidden: true             // hide visually
+    },
     email: {
       order: 2,
       placeholder: "Enter your email address",
