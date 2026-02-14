@@ -15,6 +15,7 @@ import teamRoutes from "./routes/teamRoutes.js"
 {/* CONFIGURATIONS */}
 dotenv.config();
 const app = express();
+app.set("etag", false);
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({policy: "cross-origin"}));

@@ -46,7 +46,7 @@ const HomePage = () => {
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   if (tasksLoading || isProjectsLoading) return <div>Loading..</div>;
-  if (tasksError || !tasks || !projects) return <div>Error fetching data</div>;
+  if (tasksError || !tasks || !projects) return <div className="justify-center">Everything is fine EC2 Instance and RDS is OFF</div>;
 
   const priorityCount = tasks.reduce(
     (acc: Record<string , number>, task: Task) => {
